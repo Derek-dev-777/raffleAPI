@@ -2,17 +2,22 @@ package meneghelHost.demo.Entities;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import meneghelHost.demo.Enums.RaffleStatusEnum;
 
 @Entity
 @Table(name = "raffle_tbl")
@@ -20,36 +25,36 @@ public class RaffleEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
 	private Long id;
 	
-	@Column(name = "TITLE")
 	private String title;
 	
-	@Column(name = "DESCRIPTION")
 	private String description;
 	
-	@Column(name = "IMAGE_URL")
 	private String image_url;
 	
-	@Column(name = "TICKET_PRICE")
 	private Double ticket_price;
 	
-	@Column(name = "TOTAL_TICKETS")
 	private Integer total_tickets;
 	
-	@Column(name = "DRAW_DATE")
 	private LocalDate draw_date;
 	
-	@Column(name = "CREATED_AT")
 	private LocalDateTime created_at = LocalDateTime.now();
 	
-	@Column(name = "UPDATED_AT")
 	private LocalDateTime updated_at = LocalDateTime.now();
 	 
+	@Enumerated(EnumType.STRING)
+	private RaffleStatusEnum status = RaffleStatusEnum.ACTIVE;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ORGANIZER_ID", nullable = false)
 	private UsersEntity userOrganizer;
+	
+	@OneToMany(mappedBy = "raffle")
+	private List<OrderEntity> listOfOrders = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "which_raffle")
+	private List<TicketEntity> tickets = new ArrayList<>();
 	
 	public RaffleEntity() {}
 
@@ -128,11 +133,28 @@ public class RaffleEntity {
 	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
+	
+	public RaffleStatusEnum getStatus() {
+		return status;
+	}
+
+	public void setStatus(RaffleStatusEnum status) {
+		this.status = status;
+	}
 
 	public UsersEntity getUserOrganizer() {
 		return userOrganizer;
 	}
 
+	public List<TicketEntity> getTickets() {
+		return tickets;
+	}
+
+	public List<OrderEntity> getListOfOrders() {
+		return listOfOrders;
+	}
+
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

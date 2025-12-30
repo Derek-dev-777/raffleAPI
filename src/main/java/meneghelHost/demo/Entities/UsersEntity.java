@@ -23,7 +23,7 @@ public class UsersEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
+	@Column(name = "ID") 
 	private Long id;
 	
 	@Column(name = "NAME", nullable = false)
@@ -58,18 +58,24 @@ public class UsersEntity {
 	@OneToMany(mappedBy = "userOrganizer")
 	private List<RaffleEntity> listOfRaffles = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "ticket_owner")
+	private List<TicketEntity> listOfTickets = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "user")
+	private List<OrderEntity> listOfOrders = new ArrayList<>();
+	
 	public UsersEntity () {}
 
 	public UsersEntity(String name, String email, String password, String phone_number, RolesEnum role,
-			IsActiveEnum is_active, String dultalt) {
+		 String dultalt) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.phone_number = phone_number;
 		this.role = role;
-		this.is_active = is_active;
 		this.dultalt = dultalt;
+		this.is_active = IsActiveEnum.ACTIVE;
 	}
 
 	public String getName() {
@@ -143,6 +149,19 @@ public class UsersEntity {
 
 	public LocalDateTime getCreated_at() {
 		return created_at;
+	}
+	
+
+	public List<RaffleEntity> getListOfRaffles() {
+		return listOfRaffles;
+	}
+
+	public List<TicketEntity> getListOfTickets() {
+		return listOfTickets;
+	}
+
+	public List<OrderEntity> getListOfOrders() {
+		return listOfOrders;
 	}
 
 	@Override
